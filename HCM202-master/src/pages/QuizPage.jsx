@@ -1,15 +1,130 @@
-import React, { useState } from "react";
-import { Card, Button, Divider } from "antd";
+import React, { useState, useEffect } from "react";
+import { Card, Button, Table, message, Modal, Input, Form, Spin } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  ReloadOutlined,
+  TrophyOutlined,
+  ClockCircleOutlined,
+} from "@ant-design/icons";
 import Quiz from "../components/Quiz";
+
+// MockAPI endpoint for quiz results
+const API_URL = "https://68df99fc898434f413584136.mockapi.io/api/quizResults";
 
 const QuizPage = () => {
   const [selectedQuiz, setSelectedQuiz] = useState("hcm_ideology");
+  const [quizResults, setQuizResults] = useState([]);
+  const [loadingResults, setLoadingResults] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [playerName, setPlayerName] = useState("");
+  const [currentScore, setCurrentScore] = useState(null);
+  const [quizStartTime, setQuizStartTime] = useState(null);
+  const [quizEndTime, setQuizEndTime] = useState(null);
+  const [completionTime, setCompletionTime] = useState(null);
+  const [form] = Form.useForm();
+
+  // Fetch quiz results on component mount
+  useEffect(() => {
+    fetchQuizResults();
+    // Set start time when component mounts (user starts quiz)
+    setQuizStartTime(new Date().toISOString());
+  }, []);
+
+  const fetchQuizResults = async () => {
+    setLoadingResults(true);
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) throw new Error("Failed to fetch results");
+
+      const data = await response.json();
+      // Sort by score descending, then by completion time (fastest first)
+      const sortedData = data
+        .filter((result) => result.isFinished)
+        .sort((a, b) => {
+          // First compare scores
+          if (b.score !== a.score) return b.score - a.score;
+          
+          // If scores are equal, compare completion time (shortest first)
+          const timeA = a.completionTimeSeconds || Infinity;
+          const timeB = b.completionTimeSeconds || Infinity;
+          return timeA - timeB;
+        });
+
+      setQuizResults(sortedData);
+    } catch (error) {
+      console.error("Error fetching quiz results:", error);
+      message.error("Không thể tải bảng xếp hạng!");
+    } finally {
+      setLoadingResults(false);
+    }
+  };
+
+  const formatTime = (seconds) => {
+    if (!seconds) return "N/A";
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const saveQuizResult = async (score, totalQuestions, isFinished) => {
+    if (!playerName.trim()) {
+      message.warning("Vui lòng nhập tên của bạn!");
+      return;
+    }
+
+    try {
+      const newResult = {
+        playerName: playerName.trim(),
+        score: score,
+        totalQuestions: totalQuestions,
+        isFinished: isFinished,
+        startTime: quizStartTime,
+        endTime: quizEndTime,
+        completionTimeSeconds: completionTime,
+      };
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newResult),
+      });
+
+      if (!response.ok) throw new Error("Failed to save result");
+
+      message.success("Kết quả đã được lưu thành công!");
+      setShowResultModal(false);
+      setPlayerName("");
+      form.resetFields();
+      await fetchQuizResults();
+      
+      // Reset times for next attempt
+      setQuizStartTime(new Date().toISOString());
+      setQuizEndTime(null);
+      setCompletionTime(null);
+    } catch (error) {
+      console.error("Error saving quiz result:", error);
+      message.error("Không thể lưu kết quả. Vui lòng thử lại!");
+    }
+  };
+
+  const handleQuizComplete = (score, totalQuestions) => {
+    // Calculate completion time when quiz completes (before modal shows)
+    const endTime = new Date();
+    const startTime = new Date(quizStartTime);
+    const timeInSeconds = Math.round((endTime - startTime) / 1000);
+    
+    setQuizEndTime(endTime.toISOString());
+    setCompletionTime(timeInSeconds);
+    setCurrentScore({ score, totalQuestions });
+    setShowResultModal(true);
+  };
 
   const quizzes = {
     hcm_ideology: {
       title: "Tư tưởng Hồ Chí Minh về Đảng và Nhà nước",
-      icon: "�️",
+      icon: "🏛️",
       questions: [
         {
           question: "Theo Hồ Chí Minh, Đảng phải là gì đối với nhân dân?",
@@ -269,135 +384,353 @@ const QuizPage = () => {
 
   const currentQuiz = quizzes[selectedQuiz];
 
-  return (
-    <div className="max-w-4xl mx-auto mt-20">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <h1 className="section-header">Kiểm tra tư tưởng Hồ Chí Minh</h1>
-        <div className="section-quote">
-          "Đảng phải là người anh cả thật sự của nhân dân, là công bộc thật
-          trung thành của nhân dân"
+  // Table columns for leaderboard
+  const columns = [
+    {
+      title: "Hạng",
+      key: "rank",
+      width: 70,
+      fixed: "left",
+      render: (_, __, index) => (
+        <div className="flex items-center justify-center">
+          {index === 0 && <span className="text-2xl">🥇</span>}
+          {index === 1 && <span className="text-2xl">🥈</span>}
+          {index === 2 && <span className="text-2xl">🥉</span>}
+          {index > 2 && (
+            <span className="font-semibold text-gray-600">#{index + 1}</span>
+          )}
         </div>
+      ),
+    },
+    {
+      title: "Tên người chơi",
+      dataIndex: "playerName",
+      key: "playerName",
+      width: 150,
+      ellipsis: true,
+      render: (name) => <span className="font-semibold">{name}</span>,
+    },
+    {
+      title: "Điểm",
+      key: "score",
+      width: 80,
+      render: (_, record) => (
+        <span className="font-bold text-green-600">
+          {record.score}/{record.totalQuestions}
+        </span>
+      ),
+    },
+    {
+      title: "Tỷ lệ",
+      key: "percentage",
+      width: 80,
+      render: (_, record) => {
+        const percentage = Math.round(
+          (record.score / record.totalQuestions) * 100
+        );
+        return (
+          <span
+            className={`font-semibold ${
+              percentage >= 70
+                ? "text-green-600"
+                : percentage >= 50
+                ? "text-yellow-600"
+                : "text-red-600"
+            }`}
+          >
+            {percentage}%
+          </span>
+        );
+      },
+    },
+    {
+      title: (
+        <div className="flex items-center">
+          <ClockCircleOutlined className="mr-1" />
+          <span>Thời gian</span>
+        </div>
+      ),
+      key: "completionTime",
+      width: 100,
+      render: (_, record) => (
+        <div className="flex items-center">
+          <span className="font-semibold text-blue-600">
+            {formatTime(record.completionTimeSeconds)}
+          </span>
+        </div>
+      ),
+    },
+    {
+      title: "Ngày hoàn thành",
+      dataIndex: "endTime",
+      key: "endTime",
+      width: 140,
+      render: (time) => (
+        <span className="text-gray-600 text-xs">
+          {new Date(time).toLocaleString("vi-VN", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
+      ),
+    },
+  ];
 
-        {/* Quiz Selection */}
+  return (
+    <div className="h-screen overflow-hidden bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
+      <div className="h-full max-w-[1600px] mx-auto px-4 py-6 flex flex-col">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="mb-8"
+          transition={{ duration: 0.5 }}
+          className="flex-shrink-0"
         >
-          <Card className="content-card">
-            <div className="flex items-center mb-4">
-              <span className="text-2xl mr-3">🏛️</span>
-              <h3 className="text-xl font-semibold text-primary">
-                Bộ câu hỏi tư tưởng Hồ Chí Minh
-              </h3>
-            </div>
-
-            <div className="bg-gradient-to-r from-primary/5 to-accent/5 p-4 rounded-lg border border-primary/20">
-              <p className="text-gray-700 text-center">
-                <strong>20 câu hỏi</strong> về tư tưởng Hồ Chí Minh về Đảng Cộng
-                sản Việt Nam và Nhà nước của dân, do dân, vì dân
-              </p>
-            </div>
-          </Card>
+          <h1 className="text-4xl font-bold text-center mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600">
+            Kiểm tra tư tưởng Hồ Chí Minh
+          </h1>
+          <p className="text-center text-gray-600 italic mb-6">
+            "Đảng phải là người anh cả thật sự của nhân dân, là công bộc thật
+            trung thành của nhân dân"
+          </p>
         </motion.div>
 
-        {/* Current Quiz Display */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={selectedQuiz}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.3 }}
-          >
-            <div className="mb-6">
-              <Card className="content-card bg-gradient-to-r from-primary/5 to-accent/5 border-l-4 border-primary">
-                <div className="flex items-center">
-                  <span className="text-3xl mr-4">{currentQuiz.icon}</span>
-                  <div>
-                    <h2 className="text-2xl font-bold text-primary">
-                      {currentQuiz.title}
-                    </h2>
-                    <p className="text-gray-600 mt-1">
-                      Kiểm tra hiểu biết của bạn về tư tưởng chính trị của Bác
-                      Hồ
-                    </p>
-                  </div>
+        <div className="flex-1 grid lg:grid-cols-12 gap-6 overflow-hidden">
+          {/* Left side - Quiz (60% width) */}
+          <div className="lg:col-span-7 flex flex-col overflow-hidden">
+            {/* Quiz Selection */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="flex-shrink-0 mb-4"
+            >
+              <Card className="shadow-lg">
+                <div className="flex items-center mb-3">
+                  <span className="text-2xl mr-3">🏛️</span>
+                  <h3 className="text-lg font-semibold text-red-700">
+                    Bộ câu hỏi tư tưởng Hồ Chí Minh
+                  </h3>
                 </div>
-              </Card>
-            </div>
 
-            <Quiz questions={currentQuiz.questions} />
-          </motion.div>
-        </AnimatePresence>
-
-        {/* Quiz Statistics */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mt-8"
-        >
-          <Card className="content-card">
-            <h3 className="text-xl font-semibold text-primary mb-4">
-              � Thông tin bộ câu hỏi
-            </h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="p-4 rounded-lg bg-gradient-to-r from-blue-50 to-blue-100 border border-blue-200">
-                <div className="text-center">
-                  <div className="text-2xl mb-2">🏛️</div>
-                  <h5 className="font-semibold text-blue-800 mb-1">
-                    Chủ đề chính
-                  </h5>
-                  <p className="text-xs text-blue-600">Đảng và Nhà nước</p>
-                </div>
-              </div>
-
-              <div className="p-4 rounded-lg bg-gradient-to-r from-green-50 to-green-100 border border-green-200">
-                <div className="text-center">
-                  <div className="text-2xl mb-2">📝</div>
-                  <h5 className="font-semibold text-green-800 mb-1">
-                    Số câu hỏi
-                  </h5>
-                  <p className="text-xs text-green-600">
-                    {currentQuiz.questions.length} câu
+                <div className="bg-gradient-to-r from-red-50 to-orange-50 p-3 rounded-lg border border-red-200">
+                  <p className="text-gray-700 text-center text-sm">
+                    <strong>20 câu hỏi</strong> về tư tưởng Hồ Chí Minh về Đảng
+                    Cộng sản Việt Nam và Nhà nước của dân, do dân, vì dân
                   </p>
                 </div>
-              </div>
+              </Card>
+            </motion.div>
 
-              <div className="p-4 rounded-lg bg-gradient-to-r from-purple-50 to-purple-100 border border-purple-200">
-                <div className="text-center">
-                  <div className="text-2xl mb-2">⭐</div>
-                  <h5 className="font-semibold text-purple-800 mb-1">Độ khó</h5>
-                  <p className="text-xs text-purple-600">Trung cấp</p>
-                </div>
-              </div>
+            {/* Quiz Content */}
+            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-red-300 scrollbar-track-gray-100">
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={selectedQuiz}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Quiz
+                    questions={currentQuiz.questions}
+                    onComplete={handleQuizComplete}
+                  />
+                </motion.div>
+              </AnimatePresence>
             </div>
+          </div>
 
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <div className="text-center text-sm text-gray-600">
-                <h4 className="font-semibold text-gray-800 mb-2">
-                  Nội dung kiểm tra:
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-left">
-                  <p>✓ Khái niệm về Đảng và vai trò lãnh đạo</p>
-                  <p>✓ Nguyên tắc "của dân, do dân, vì dân"</p>
-                  <p>✓ Kiểm soát quyền lực nhà nước</p>
-                  <p>✓ Chống tham nhũng, lãng phí, quan liêu</p>
-                  <p>✓ Xây dựng Đảng và cán bộ</p>
-                  <p>✓ Mối quan hệ Đảng - Nhà nước - Nhân dân</p>
-                </div>
-              </div>
+          {/* Right side - Leaderboard (40% width) */}
+          <div className="lg:col-span-5 flex flex-col overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.3 }}
+              className="h-full flex flex-col"
+            >
+              <Card
+                className="shadow-lg h-full flex flex-col"
+                title={
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                      <TrophyOutlined className="text-yellow-500 text-xl mr-2" />
+                      <span className="font-bold">Bảng xếp hạng</span>
+                    </div>
+                    <Button
+                      type="text"
+                      icon={<ReloadOutlined />}
+                      onClick={fetchQuizResults}
+                      loading={loadingResults}
+                      size="small"
+                      className="hover:text-red-600"
+                    />
+                  </div>
+                }
+                bodyStyle={{
+                  padding: "12px",
+                  flexGrow: 1,
+                  overflow: "hidden",
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {loadingResults ? (
+                  <div className="flex-1 flex items-center justify-center">
+                    <Spin size="large" />
+                  </div>
+                ) : quizResults.length > 0 ? (
+                  <div className="flex-1 overflow-hidden">
+                    <Table
+                      dataSource={quizResults}
+                      columns={columns}
+                      rowKey="id"
+                      pagination={false}
+                      size="small"
+                      scroll={{ y: "calc(100vh - 350px)", x: 650 }}
+                      className="custom-table"
+                    />
+                  </div>
+                ) : (
+                  <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
+                    <TrophyOutlined className="text-6xl mb-3 opacity-30" />
+                    <p className="text-lg font-semibold">Chưa có kết quả nào</p>
+                    <p className="text-sm">Hãy là người đầu tiên!</p>
+                  </div>
+                )}
+              </Card>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Save Result Modal */}
+        <Modal
+          title={
+            <div className="flex items-center">
+              <TrophyOutlined className="text-yellow-500 text-2xl mr-2" />
+              <span>Hoàn thành Quiz!</span>
             </div>
-          </Card>
-        </motion.div>
-      </motion.div>
+          }
+          open={showResultModal}
+          onCancel={null}
+          closable={false}
+          maskClosable={false}
+          keyboard={false}
+          footer={null}
+          centered
+        >
+          {currentScore && (
+            <div className="text-center mb-6">
+              <div className="text-6xl mb-4">
+                {currentScore.score >= currentScore.totalQuestions * 0.7
+                  ? "🎉"
+                  : currentScore.score >= currentScore.totalQuestions * 0.5
+                  ? "😊"
+                  : "📚"}
+              </div>
+              <h3 className="text-2xl font-bold mb-2">
+                Điểm số: {currentScore.score}/{currentScore.totalQuestions}
+              </h3>
+              <p className="text-lg text-gray-600 mb-2">
+                Tỷ lệ đúng:{" "}
+                {Math.round(
+                  (currentScore.score / currentScore.totalQuestions) * 100
+                )}
+                %
+              </p>
+              {completionTime !== null && (
+                <div className="flex items-center justify-center text-blue-600">
+                  <ClockCircleOutlined className="mr-2" />
+                  <span className="font-semibold text-lg">
+                    Thời gian hoàn thành: {formatTime(completionTime)}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+
+          <Form
+            form={form}
+            onFinish={() =>
+              saveQuizResult(
+                currentScore.score,
+                currentScore.totalQuestions,
+                true
+              )
+            }
+            layout="vertical"
+          >
+            <Form.Item
+              label="Nhập tên của bạn để lưu kết quả"
+              name="playerName"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập tên của bạn!",
+                },
+                {
+                  min: 2,
+                  message: "Tên phải có ít nhất 2 ký tự!",
+                },
+                {
+                  max: 50,
+                  message: "Tên không được quá 50 ký tự!",
+                },
+              ]}
+            >
+              <Input
+                placeholder="Tên của bạn"
+                value={playerName}
+                onChange={(e) => setPlayerName(e.target.value)}
+                size="large"
+                autoFocus
+              />
+            </Form.Item>
+
+            <Form.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="w-full bg-red-600 hover:bg-red-700"
+                size="large"
+              >
+                Lưu kết quả
+              </Button>
+            </Form.Item>
+          </Form>
+
+          <div className="text-center text-sm text-gray-500 mt-4">
+            <strong>Lưu ý:</strong> Bạn phải nhập tên để lưu kết quả
+          </div>
+        </Modal>
+      </div>
+
+      <style jsx>{`
+        .custom-table .ant-table-thead > tr > th {
+          background-color: #fef2f2;
+          font-weight: 600;
+          color: #991b1b;
+        }
+        .custom-table .ant-table-tbody > tr:hover > td {
+          background-color: #fff7ed;
+        }
+        .scrollbar-thin::-webkit-scrollbar {
+          width: 6px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+          background: #f3f4f6;
+          border-radius: 3px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+          background: #fca5a5;
+          border-radius: 3px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+          background: #f87171;
+        }
+      `}</style>
     </div>
   );
 };

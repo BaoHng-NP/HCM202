@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Button, Radio, Alert } from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
 
-const Quiz = ({ questions }) => {
+const Quiz = ({ questions, onComplete }) => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [showResult, setShowResult] = useState(false);
@@ -11,18 +11,18 @@ const Quiz = ({ questions }) => {
   const [score, setScore] = useState(0);
   const [answeredQuestions, setAnsweredQuestions] = useState(0);
   const [shuffledOptions, setShuffledOptions] = useState([]);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const currentQuestion = questions[currentQuestionIndex];
 
   // Shuffle options when question changes
-  React.useEffect(() => {
+  useEffect(() => {
     if (currentQuestion) {
       const optionsWithIndex = currentQuestion.options.map((option, index) => ({
         text: option,
         originalIndex: index,
       }));
 
-      // Fisher-Yates shuffle algorithm
       const shuffled = [...optionsWithIndex];
       for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -36,7 +36,6 @@ const Quiz = ({ questions }) => {
   const handleSubmit = () => {
     if (selectedAnswer === null) return;
 
-    // Find the original index of the selected shuffled option
     const selectedOption = shuffledOptions[selectedAnswer];
     const correct =
       selectedOption.originalIndex === currentQuestion.correctAnswer;
@@ -45,6 +44,17 @@ const Quiz = ({ questions }) => {
     setAnsweredQuestions((prev) => prev + 1);
     if (correct) {
       setScore((prev) => prev + 1);
+    }
+
+    // Check if this is the last question
+    if (currentQuestionIndex === questions.length - 1 && !quizCompleted) {
+      setQuizCompleted(true);
+      // Call onComplete callback after a short delay
+      setTimeout(() => {
+        if (onComplete) {
+          onComplete(correct ? score + 1 : score, questions.length);
+        }
+      }, 500);
     }
   };
 
@@ -64,6 +74,7 @@ const Quiz = ({ questions }) => {
     setIsCorrect(false);
     setScore(0);
     setAnsweredQuestions(0);
+    setQuizCompleted(false);
   };
 
   return (
@@ -170,8 +181,8 @@ const Quiz = ({ questions }) => {
             Kiểm tra đáp án
           </Button>
         ) : (
-          <div className="flex gap-3">
-            {currentQuestionIndex < questions.length - 1 ? (
+          <div className="flex gap-3 flex-wrap">
+            {currentQuestionIndex < questions.length - 1 && (
               <Button
                 type="primary"
                 onClick={handleNext}
@@ -179,24 +190,6 @@ const Quiz = ({ questions }) => {
               >
                 Câu tiếp theo
               </Button>
-            ) : (
-              <div className="flex gap-3">
-                <Alert
-                  message={`Hoàn thành! Điểm số: ${score}/${questions.length}`}
-                  description={`Bạn đã trả lời đúng ${score} trên ${
-                    questions.length
-                  } câu hỏi (${Math.round((score / questions.length) * 100)}%)`}
-                  type={
-                    score >= questions.length * 0.7
-                      ? "success"
-                      : score >= questions.length * 0.5
-                      ? "warning"
-                      : "error"
-                  }
-                  showIcon
-                  className="rounded-lg flex-1"
-                />
-              </div>
             )}
             <Button
               onClick={handleReset}
@@ -216,15 +209,13 @@ const Quiz = ({ questions }) => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {currentQuestionIndex < questions.length - 1 && (
-              <Alert
-                message={isCorrect ? "Chính xác! 🎉" : "Chưa đúng! 🤔"}
-                description={currentQuestion.explanation}
-                type={isCorrect ? "success" : "error"}
-                showIcon
-                className="rounded-lg"
-              />
-            )}
+            <Alert
+              message={isCorrect ? "Chính xác! 🎉" : "Chưa đúng! 🤔"}
+              description={currentQuestion.explanation}
+              type={isCorrect ? "success" : "error"}
+              showIcon
+              className="rounded-lg"
+            />
           </motion.div>
         )}
       </AnimatePresence>
