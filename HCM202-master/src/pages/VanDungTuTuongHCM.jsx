@@ -35,16 +35,6 @@ const VanDungTuTuongHCM = () => {
         }}
       >
         <div className="container mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="flex justify-center space-x-6 mb-8"
-          >
-            <StarOutlined className="text-5xl md:text-6xl text-yellow-400 drop-shadow-2xl" />
-            <TeamOutlined className="text-5xl md:text-6xl text-yellow-300 drop-shadow-2xl" />
-            <BuildOutlined className="text-5xl md:text-6xl text-yellow-400 drop-shadow-2xl" />
-          </motion.div>
 
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
@@ -73,7 +63,7 @@ const VanDungTuTuongHCM = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="text-lg md:text-xl lg:text-2xl text-yellow-50 font-semibold max-w-4xl mx-auto leading-relaxed drop-shadow-lg"
           >
-            Chương 4.3: Xây dựng Đảng thật sự trong sạch, vững mạnh
+            Xây dựng Đảng thật sự trong sạch, vững mạnh
             <br />
             và Nhà nước của dân, do dân, vì dân trong thời kỳ mới
           </motion.p>
@@ -259,6 +249,8 @@ const VanDungTuTuongHCM = () => {
                   </div>
                   <div className="bg-red-50 p-4 rounded-lg text-center">
                     {/* <ShieldOutlined className="text-2xl text-red-600 mb-2" /> */}
+                    <FireOutlined className="text-2xl text-yellow-600 mb-2" />
+
                     <h4 className="font-semibold text-red-700 mb-1">
                       Đấu tranh nội bộ
                     </h4>

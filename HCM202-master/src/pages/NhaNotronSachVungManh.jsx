@@ -24,17 +24,6 @@ const NhaNotronSachVungManh = () => {
         }}
       >
         <div className="container mx-auto px-6 text-center">
-          <motion.div
-            initial={{ opacity: 0, y: -30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="flex justify-center space-x-6 mb-8"
-          >
-            <EyeOutlined className="text-5xl md:text-6xl text-yellow-400 drop-shadow-2xl" />
-            <SafetyOutlined className="text-5xl md:text-6xl text-yellow-300 drop-shadow-2xl" />
-            <TeamOutlined className="text-5xl md:text-6xl text-yellow-400 drop-shadow-2xl" />
-          </motion.div>
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
