@@ -43,7 +43,7 @@ const QuizPage = () => {
         .sort((a, b) => {
           // First compare scores
           if (b.score !== a.score) return b.score - a.score;
-          
+
           // If scores are equal, compare completion time (shortest first)
           const timeA = a.completionTimeSeconds || Infinity;
           const timeB = b.completionTimeSeconds || Infinity;
@@ -63,7 +63,7 @@ const QuizPage = () => {
     if (!seconds) return "N/A";
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
   const saveQuizResult = async (score, totalQuestions, isFinished) => {
@@ -98,7 +98,7 @@ const QuizPage = () => {
       setPlayerName("");
       form.resetFields();
       await fetchQuizResults();
-      
+
       // Reset times for next attempt
       setQuizStartTime(new Date().toISOString());
       setQuizEndTime(null);
@@ -114,7 +114,7 @@ const QuizPage = () => {
     const endTime = new Date();
     const startTime = new Date(quizStartTime);
     const timeInSeconds = Math.round((endTime - startTime) / 1000);
-    
+
     setQuizEndTime(endTime.toISOString());
     setCompletionTime(timeInSeconds);
     setCurrentScore({ score, totalQuestions });
@@ -480,43 +480,39 @@ const QuizPage = () => {
   ];
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
-      <div className="h-full max-w-[1600px] mx-auto px-4 py-6 flex flex-col">
+    <div className="min-h-screen lg:h-screen overflow-auto lg:overflow-hidden bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
+      <div className="h-full max-w-[1600px] mx-auto px-3 sm:px-4 py-4 sm:py-6 flex flex-col">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
           className="flex-shrink-0"
         >
-          <h1 className="text-4xl font-bold text-center mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-2 sm:mb-3 text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600">
             Kiểm tra tư tưởng Hồ Chí Minh
           </h1>
-          <p className="text-center text-gray-600 italic mb-6">
-            "Đảng phải là người anh cả thật sự của nhân dân, là công bộc thật
-            trung thành của nhân dân"
-          </p>
         </motion.div>
 
-        <div className="flex-1 grid lg:grid-cols-12 gap-6 overflow-hidden">
-          {/* Left side - Quiz (60% width) */}
-          <div className="lg:col-span-7 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6 overflow-hidden">
+          {/* Left side - Quiz (60% width on desktop, full width on mobile) */}
+          <div className="lg:col-span-7 flex flex-col overflow-hidden order-2 lg:order-1">
             {/* Quiz Selection */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="flex-shrink-0 mb-4"
+              className="flex-shrink-0 mb-3 sm:mb-4"
             >
-              <Card className="shadow-lg">
-                <div className="flex items-center mb-3">
-                  <span className="text-2xl mr-3">🏛️</span>
-                  <h3 className="text-lg font-semibold text-red-700">
+              <Card className="shadow-lg" bodyStyle={{ padding: "12px 16px" }}>
+                <div className="flex items-center mb-2 sm:mb-3">
+                  <span className="text-xl sm:text-2xl mr-2 sm:mr-3">🏛️</span>
+                  <h3 className="text-base sm:text-lg font-semibold text-red-700">
                     Bộ câu hỏi tư tưởng Hồ Chí Minh
                   </h3>
                 </div>
 
-                <div className="bg-gradient-to-r from-red-50 to-orange-50 p-3 rounded-lg border border-red-200">
-                  <p className="text-gray-700 text-center text-sm">
+                <div className="bg-gradient-to-r from-red-50 to-orange-50 p-2 sm:p-3 rounded-lg border border-red-200">
+                  <p className="text-gray-700 text-center text-xs sm:text-sm">
                     <strong>20 câu hỏi</strong> về tư tưởng Hồ Chí Minh về Đảng
                     Cộng sản Việt Nam và Nhà nước của dân, do dân, vì dân
                   </p>
@@ -543,21 +539,23 @@ const QuizPage = () => {
             </div>
           </div>
 
-          {/* Right side - Leaderboard (40% width) */}
-          <div className="lg:col-span-5 flex flex-col overflow-hidden">
+          {/* Right side - Leaderboard (40% width on desktop, full width on mobile) */}
+          <div className="lg:col-span-5 flex flex-col overflow-hidden order-1 lg:order-2 mb-4 lg:mb-0">
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 }}
-              className="h-full flex flex-col"
+              className="h-full flex flex-col max-h-[350px] lg:max-h-full"
             >
               <Card
                 className="shadow-lg h-full flex flex-col"
                 title={
                   <div className="flex items-center justify-between">
                     <div className="flex items-center">
-                      <TrophyOutlined className="text-yellow-500 text-xl mr-2" />
-                      <span className="font-bold">Bảng xếp hạng</span>
+                      <TrophyOutlined className="text-yellow-500 text-lg sm:text-xl mr-2" />
+                      <span className="font-bold text-sm sm:text-base">
+                        Bảng xếp hạng
+                      </span>
                     </div>
                     <Button
                       type="text"
@@ -570,7 +568,7 @@ const QuizPage = () => {
                   </div>
                 }
                 bodyStyle={{
-                  padding: "12px",
+                  padding: window.innerWidth < 640 ? "8px" : "12px",
                   flexGrow: 1,
                   overflow: "hidden",
                   display: "flex",
@@ -589,7 +587,13 @@ const QuizPage = () => {
                       rowKey="id"
                       pagination={false}
                       size="small"
-                      scroll={{ y: "calc(100vh - 350px)", x: 650 }}
+                      scroll={{
+                        y:
+                          window.innerWidth < 1024
+                            ? 250
+                            : "calc(100vh - 350px)",
+                        x: 600,
+                      }}
                       className="custom-table"
                     />
                   </div>
@@ -609,8 +613,8 @@ const QuizPage = () => {
         <Modal
           title={
             <div className="flex items-center">
-              <TrophyOutlined className="text-yellow-500 text-2xl mr-2" />
-              <span>Hoàn thành Quiz!</span>
+              <TrophyOutlined className="text-yellow-500 text-xl sm:text-2xl mr-2" />
+              <span className="text-base sm:text-lg">Hoàn thành Quiz!</span>
             </div>
           }
           open={showResultModal}
@@ -620,20 +624,21 @@ const QuizPage = () => {
           keyboard={false}
           footer={null}
           centered
+          width={window.innerWidth < 640 ? "90%" : 520}
         >
           {currentScore && (
-            <div className="text-center mb-6">
-              <div className="text-6xl mb-4">
+            <div className="text-center mb-4 sm:mb-6">
+              <div className="text-5xl sm:text-6xl mb-3 sm:mb-4">
                 {currentScore.score >= currentScore.totalQuestions * 0.7
                   ? "🎉"
                   : currentScore.score >= currentScore.totalQuestions * 0.5
                   ? "😊"
                   : "📚"}
               </div>
-              <h3 className="text-2xl font-bold mb-2">
+              <h3 className="text-xl sm:text-2xl font-bold mb-2">
                 Điểm số: {currentScore.score}/{currentScore.totalQuestions}
               </h3>
-              <p className="text-lg text-gray-600 mb-2">
+              <p className="text-base sm:text-lg text-gray-600 mb-2">
                 Tỷ lệ đúng:{" "}
                 {Math.round(
                   (currentScore.score / currentScore.totalQuestions) * 100
@@ -642,9 +647,9 @@ const QuizPage = () => {
               </p>
               {completionTime !== null && (
                 <div className="flex items-center justify-center text-blue-600">
-                  <ClockCircleOutlined className="mr-2" />
-                  <span className="font-semibold text-lg">
-                    Thời gian hoàn thành: {formatTime(completionTime)}
+                  <ClockCircleOutlined className="mr-2 text-base sm:text-lg" />
+                  <span className="font-semibold text-sm sm:text-lg">
+                    Thời gian: {formatTime(completionTime)}
                   </span>
                 </div>
               )}
@@ -663,7 +668,11 @@ const QuizPage = () => {
             layout="vertical"
           >
             <Form.Item
-              label="Nhập tên của bạn để lưu kết quả"
+              label={
+                <span className="text-sm sm:text-base">
+                  Nhập tên của bạn để lưu kết quả
+                </span>
+              }
               name="playerName"
               rules={[
                 {
@@ -684,7 +693,7 @@ const QuizPage = () => {
                 placeholder="Tên của bạn"
                 value={playerName}
                 onChange={(e) => setPlayerName(e.target.value)}
-                size="large"
+                size={window.innerWidth < 640 ? "middle" : "large"}
                 autoFocus
               />
             </Form.Item>
@@ -694,7 +703,7 @@ const QuizPage = () => {
                 type="primary"
                 htmlType="submit"
                 className="w-full bg-red-600 hover:bg-red-700"
-                size="large"
+                size={window.innerWidth < 640 ? "middle" : "large"}
               >
                 Lưu kết quả
               </Button>

@@ -78,21 +78,24 @@ const Quiz = ({ questions, onComplete }) => {
   };
 
   return (
-    <Card className="content-card bg-gradient-to-br from-accent/5 to-primary/5">
-      <div className="flex items-center mb-4">
-        <span className="text-2xl mr-3">🧠</span>
-        <h3 className="text-xl font-semibold text-primary">
+    <Card
+      className="content-card bg-gradient-to-br from-accent/5 to-primary/5"
+      bodyStyle={{ padding: window.innerWidth < 640 ? "16px" : "24px" }}
+    >
+      <div className="flex items-center mb-3 sm:mb-4">
+        <span className="text-xl sm:text-2xl mr-2 sm:mr-3">🧠</span>
+        <h3 className="text-lg sm:text-xl font-semibold text-primary">
           Kiểm tra kiến thức
         </h3>
       </div>
 
       {/* Progress indicator */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <span className="text-sm text-gray-600">
+      <div className="mb-4 sm:mb-6">
+        <div className="flex justify-between items-center mb-3 sm:mb-4">
+          <span className="text-xs sm:text-sm text-gray-600 font-medium">
             Câu {currentQuestionIndex + 1} / {questions.length}
           </span>
-          <span className="text-sm text-gray-600">
+          <span className="text-xs sm:text-sm text-gray-600 font-medium">
             Điểm: {score} / {answeredQuestions}
           </span>
         </div>
@@ -108,8 +111,8 @@ const Quiz = ({ questions, onComplete }) => {
         </div>
       </div>
 
-      <div className="mb-6">
-        <h4 className="font-medium text-gray-800 mb-4">
+      <div className="mb-4 sm:mb-6">
+        <h4 className="font-medium text-sm sm:text-base text-gray-800 mb-3 sm:mb-4 leading-relaxed">
           {currentQuestion.question}
         </h4>
 
@@ -119,7 +122,7 @@ const Quiz = ({ questions, onComplete }) => {
           disabled={showResult}
           className="w-full"
         >
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {shuffledOptions.map((option, index) => {
               const isCorrectAnswer =
                 option.originalIndex === currentQuestion.correctAnswer;
@@ -133,7 +136,7 @@ const Quiz = ({ questions, onComplete }) => {
                 >
                   <Radio
                     value={index}
-                    className={`w-full p-3 rounded-lg border transition-all duration-300 ${
+                    className={`w-full p-2 sm:p-3 rounded-lg border transition-all duration-300 ${
                       showResult
                         ? isCorrectAnswer
                           ? "bg-green-50 border-green-300"
@@ -146,7 +149,7 @@ const Quiz = ({ questions, onComplete }) => {
                     }`}
                   >
                     <span
-                      className={`ml-2 ${
+                      className={`ml-2 text-xs sm:text-sm ${
                         showResult && isCorrectAnswer
                           ? "text-green-700 font-medium"
                           : showResult && isSelectedAnswer && !isCorrect
@@ -170,30 +173,33 @@ const Quiz = ({ questions, onComplete }) => {
         </Radio.Group>
       </div>
 
-      <div className="flex gap-3 mb-4">
+      <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4">
         {!showResult ? (
           <Button
             type="primary"
             onClick={handleSubmit}
             disabled={selectedAnswer === null}
-            className="bg-primary hover:bg-red-700"
+            className="bg-primary hover:bg-red-700 text-xs sm:text-sm"
+            size={window.innerWidth < 640 ? "middle" : "large"}
           >
             Kiểm tra đáp án
           </Button>
         ) : (
-          <div className="flex gap-3 flex-wrap">
+          <div className="flex gap-2 sm:gap-3 flex-wrap">
             {currentQuestionIndex < questions.length - 1 && (
               <Button
                 type="primary"
                 onClick={handleNext}
-                className="bg-primary hover:bg-red-700"
+                className="bg-primary hover:bg-red-700 text-xs sm:text-sm"
+                size={window.innerWidth < 640 ? "middle" : "large"}
               >
                 Câu tiếp theo
               </Button>
             )}
             <Button
               onClick={handleReset}
-              className="border-primary text-primary hover:bg-primary hover:text-white"
+              className="border-primary text-primary hover:bg-primary hover:text-white text-xs sm:text-sm"
+              size={window.innerWidth < 640 ? "middle" : "large"}
             >
               Làm lại từ đầu
             </Button>
@@ -210,8 +216,16 @@ const Quiz = ({ questions, onComplete }) => {
             transition={{ duration: 0.3 }}
           >
             <Alert
-              message={isCorrect ? "Chính xác! 🎉" : "Chưa đúng! 🤔"}
-              description={currentQuestion.explanation}
+              message={
+                <span className="text-xs sm:text-sm font-medium">
+                  {isCorrect ? "Chính xác! 🎉" : "Chưa đúng! 🤔"}
+                </span>
+              }
+              description={
+                <span className="text-xs sm:text-sm">
+                  {currentQuestion.explanation}
+                </span>
+              }
               type={isCorrect ? "success" : "error"}
               showIcon
               className="rounded-lg"
