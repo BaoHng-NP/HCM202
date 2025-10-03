@@ -86,42 +86,130 @@ const TongHopPresentation = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Hero Section */}
+        {/* Hero Banner Section - Redesigned */}
         <motion.div
-          className="text-center mb-16 mt-6"
+          className="mb-16 mt-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <div className="relative">
-            <h1 className="text-4xl md:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-600 to-orange-600 mb-8">
-              Tư tưởng Hồ Chí Minh
-            </h1>
-            <div className="text-2xl md:text-3xl font-bold text-gray-600 mb-8">
-              về Đảng Cộng sản Việt Nam và Nhà nước của dân, do dân, vì dân
-            </div>
+          <motion.div
+            className="relative overflow-hidden rounded-3xl shadow-2xl bg-gradient-to-r from-red-600 via-red-700 to-orange-600"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 0.8 }}
+          >
+            <div className="grid md:grid-cols-2 gap-0 min-h-[400px] md:min-h-[450px]">
+              {/* Left Side - Image */}
+              <motion.div
+                className="relative h-[400px] md:h-auto overflow-hidden"
+                initial={{ opacity: 0, x: -50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+              >
+                <div
+                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                  style={{
+                    backgroundImage: `url('https://mediabcb.mediatech.vn/upload/image/202405/medium/119322_chu_tich_ho_chi_minh_doc_tuyen_ngon_doc_lap_anh_t_l_05340013.jpg')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center center",
+                  }}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-red-700/40"></div>
+                </div>
 
-            <motion.div
-              className="max-w-4xl mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-orange-200"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              <div className="flex justify-center mb-6">
-                <img
-                  src="https://mediabcb.mediatech.vn/upload/image/202405/medium/119322_chu_tich_ho_chi_minh_doc_tuyen_ngon_doc_lap_anh_t_l_05340013.jpg"
-                  alt="Hồ Chí Minh"
-                  className="w-80 h-50 object-cover rounded-lg shadow-lg border-2 border-red-200"
-                />
-              </div>
-              <blockquote className="text-xl md:text-2xl text-gray-700 italic leading-relaxed">
-                "Nhà nước ta là Nhà nước của nhân dân, do nhân dân, vì nhân dân"
-              </blockquote>
-              <footer className="text-lg text-red-600 mt-4 font-semibold">
-                - Chủ tịch Hồ Chí Minh
-              </footer>
-            </motion.div>
-          </div>
+                {/* Decorative Stars */}
+                <motion.div
+                  className="absolute top-6 left-6 text-yellow-300"
+                  initial={{ opacity: 0, scale: 0 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 1.0, duration: 0.5 }}
+                >
+                  <StarOutlined className="text-5xl drop-shadow-lg" />
+                </motion.div>
+              </motion.div>
+
+              {/* Right Side - Content */}
+              <motion.div
+                className="flex flex-col justify-center p-8 md:p-10 lg:p-12 min-h-[400px] md:min-h-[450px]"
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.6, duration: 0.8 }}
+              >
+                {/* Main Title */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8, duration: 0.6 }}
+                  className="mb-6"
+                >
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-tight">
+                    Tư tưởng
+                    <br />
+                    <span className="text-yellow-300">Hồ Chí Minh</span>
+                  </h1>
+                  <div className="h-1 w-24 bg-yellow-300 rounded-full mb-6"></div>
+                  <p className="text-xl md:text-2xl text-orange-100 font-medium leading-relaxed">
+                    về Đảng Cộng sản Việt Nam
+                    <br />
+                    và Nhà nước của dân, do dân, vì dân
+                  </p>
+                </motion.div>
+
+                {/* Quote Box */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.0, duration: 0.6 }}
+                  className="bg-white/95 backdrop-blur-sm rounded-xl p-6 shadow-xl border-l-4 border-yellow-400"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="text-yellow-500 text-3xl mt-1">"</div>
+                    <div className="flex-1">
+                      <p className="text-gray-800 text-lg md:text-xl font-semibold italic leading-relaxed">
+                        Nhà nước ta là Nhà nước của nhân dân, do nhân dân, vì
+                        nhân dân
+                      </p>
+                      <p className="text-red-600 font-bold mt-3 text-sm md:text-base">
+                        — Chủ tịch Hồ Chí Minh
+                      </p>
+                    </div>
+                    <div className="text-yellow-500 text-3xl self-end">"</div>
+                  </div>
+                </motion.div>
+
+                {/* Chapter Info */}
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 1.2, duration: 0.6 }}
+                  className="mt-6 text-orange-200 text-sm md:text-base"
+                >
+                  <div className="flex items-center gap-2">
+                    <BookOutlined className="text-yellow-300" />
+                    <span>
+                      Chương 4 - Tư tưởng chính trị về xây dựng Đảng và Nhà nước
+                    </span>
+                  </div>
+                </motion.div>
+
+                {/* Decorative Star */}
+                <motion.div
+                  className="absolute bottom-6 right-6 text-yellow-300 opacity-30"
+                  initial={{ opacity: 0, rotate: 0 }}
+                  animate={{ opacity: 0.3, rotate: 360 }}
+                  transition={{
+                    delay: 1.4,
+                    duration: 2,
+                    repeat: Infinity,
+                    repeatDelay: 3,
+                  }}
+                >
+                  <StarOutlined className="text-6xl" />
+                </motion.div>
+              </motion.div>
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Navigation Cards */}
@@ -152,8 +240,6 @@ const TongHopPresentation = () => {
                     <p className="text-gray-600 text-sm mb-4">
                       {section.description}
                     </p>
-
-
                   </div>
                 </Card>
               </Link>
