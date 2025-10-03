@@ -1,5 +1,16 @@
-import React, { useState } from "react";
-import { Card, Button, Alert, Avatar, Input, Form, Modal, Badge } from "antd";
+import React, { useState, useEffect } from "react";
+import {
+  Card,
+  Button,
+  Alert,
+  Avatar,
+  Input,
+  Form,
+  Modal,
+  Badge,
+  message,
+  Spin,
+} from "antd";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   CommentOutlined,
@@ -12,15 +23,88 @@ import {
   SolutionOutlined,
   BulbOutlined,
   CheckCircleOutlined,
+  LoadingOutlined,
 } from "@ant-design/icons";
 
 const { TextArea } = Input;
+
+// MockAPI endpoint
+const API_URL = "https://68df99fc898434f413584136.mockapi.io/api/answer";
 
 const ThamNhungThaoLuan = () => {
   const [currentView, setCurrentView] = useState("quote");
   const [comments, setComments] = useState([]);
   const [commentForm] = Form.useForm();
   const [isCommentModalVisible, setIsCommentModalVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [fetchingComments, setFetchingComments] = useState(false);
+
+  // Fetch all comments from MockAPI on component mount
+  useEffect(() => {
+    fetchComments();
+  }, []);
+
+  const fetchComments = async () => {
+    setFetchingComments(true);
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error("Failed to fetch comments");
+      }
+      const data = await response.json();
+
+      // Sort by time (newest first)
+      const sortedComments = data.sort(
+        (a, b) => new Date(b.time) - new Date(a.time)
+      );
+
+      setComments(sortedComments);
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+      message.error("Không thể tải các câu trả lời. Vui lòng thử lại!");
+    } finally {
+      setFetchingComments(false);
+    }
+  };
+
+  const handleAddComment = async (values) => {
+    setLoading(true);
+    try {
+      const newComment = {
+        answer: values.comment,
+        time: new Date().toISOString(),
+        author: values.name || "Sinh viên",
+        question: values.question || "Chung",
+        likes: 0,
+      };
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newComment),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to post comment");
+      }
+
+      const savedComment = await response.json();
+
+      message.success("Ý kiến của bạn đã được đăng thành công!");
+      commentForm.resetFields();
+      setIsCommentModalVisible(false);
+
+      // Refresh comments list
+      await fetchComments();
+    } catch (error) {
+      console.error("Error adding comment:", error);
+      message.error("Có lỗi xảy ra. Vui lòng thử lại!");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const views = [
     {
@@ -80,20 +164,6 @@ const ThamNhungThaoLuan = () => {
       ],
     },
   ];
-
-  const handleAddComment = (values) => {
-    const newComment = {
-      id: Date.now(),
-      author: values.name || "Sinh viên",
-      content: values.comment,
-      time: new Date().toLocaleString("vi-VN"),
-      likes: 0,
-      question: values.question,
-    };
-    setComments([newComment, ...comments]);
-    commentForm.resetFields();
-    setIsCommentModalVisible(false);
-  };
 
   const getCurrentContent = () => {
     switch (currentView) {
@@ -387,38 +457,63 @@ const ThamNhungThaoLuan = () => {
               ))}
             </div>
 
-            {/* Comments Section */}
-            {comments.length > 0 && (
+            {/* Comments Section - UPDATED with MockAPI */}
+            {fetchingComments ? (
+              <div className="text-center py-12">
+                <Spin
+                  indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+                />
+                <p className="text-gray-500 mt-4">Đang tải câu trả lời...</p>
+              </div>
+            ) : comments.length > 0 ? (
               <motion.div
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.6 }}
               >
-                <Card title="Ý kiến sinh viên">
+                <Card
+                  title={
+                    <div className="flex items-center justify-between">
+                      <span>Ý kiến sinh viên</span>
+                      <Badge
+                        count={comments.length}
+                        style={{ backgroundColor: "#52c41a" }}
+                        showZero
+                      />
+                    </div>
+                  }
+                >
                   <div className="space-y-4">
                     {comments.map((comment) => (
                       <div
                         key={comment.id}
-                        className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg"
+                        className="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
                       >
-                        <Avatar icon={<UserOutlined />} />
+                        <Avatar
+                          icon={<UserOutlined />}
+                          className="bg-blue-500"
+                        />
                         <div className="flex-1">
                           <div className="flex items-center space-x-2 mb-2">
                             <span className="font-semibold text-gray-800">
-                              {comment.author}
+                              {comment.author || "Sinh viên"}
                             </span>
                             <span className="text-gray-500 text-sm">
-                              {comment.time}
+                              {new Date(comment.time).toLocaleString("vi-VN")}
                             </span>
+                            {comment.question && (
+                              <Badge
+                                count={comment.question}
+                                style={{ backgroundColor: "#f59e0b" }}
+                              />
+                            )}
                           </div>
-                          <p className="text-gray-700 mb-2">
-                            {comment.content}
-                          </p>
+                          <p className="text-gray-700 mb-2">{comment.answer}</p>
                           <div className="flex items-center space-x-4 text-sm text-gray-500">
-                            <button className="flex items-center space-x-1 hover:text-red-500">
-                              <HeartOutlined />
-                              <span>{comment.likes}</span>
-                            </button>
+                            <div className="flex items-center space-x-1">
+                              <HeartOutlined className="text-red-400" />
+                              <span>{comment.likes || 0}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -426,6 +521,13 @@ const ThamNhungThaoLuan = () => {
                   </div>
                 </Card>
               </motion.div>
+            ) : (
+              <Alert
+                message="Chưa có ý kiến nào"
+                description="Hãy là người đầu tiên chia sẻ suy nghĩ của bạn!"
+                type="info"
+                showIcon
+              />
             )}
           </div>
         );
@@ -592,7 +694,7 @@ const ThamNhungThaoLuan = () => {
 
           {/* Tab Navigation */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 max-w-4xl mx-auto mb-6">
-            {views.map((view, index) => (
+            {views.map((view) => (
               <button
                 key={view.id}
                 onClick={() => setCurrentView(view.id)}
@@ -666,6 +768,7 @@ const ThamNhungThaoLuan = () => {
                 htmlType="submit"
                 icon={<SendOutlined />}
                 className="w-full"
+                loading={loading}
               >
                 Gửi ý kiến
               </Button>
