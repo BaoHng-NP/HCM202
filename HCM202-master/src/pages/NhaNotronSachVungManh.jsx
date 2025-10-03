@@ -13,24 +13,61 @@ import {
 const NhaNotronSachVungManh = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 via-white to-yellow-50">
-      {/* Header Section */}
-      <motion.div
-        className="bg-gradient-to-r from-red-600 to-red-800 text-white py-16"
-        initial={{ opacity: 0, y: -50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+      {/* Hero Banner with Background Image */}
+      <div
+        className="w-full py-20 md:py-32"
+        style={{
+          backgroundImage: `linear-gradient(rgba(185, 28, 28, 0.65), rgba(153, 27, 27, 0.65)), url('https://img.lsvn.vn/vne-news/February2024/121.jpg')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
         <div className="container mx-auto px-6 text-center">
-          <EyeOutlined className="text-5xl mb-4 text-red-100" />
-          <h1 className="text-4xl font-bold mb-4">
-            Nhà nước trong sạch, vững mạnh - Theo tư tưởng Hồ Chí Minh
-          </h1>
-          <p className="text-xl text-red-100 max-w-3xl mx-auto">
-            Xây dựng và hoàn thiện Nhà nước theo tinh thần "Của dân, do dân, vì
-            dân"
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex justify-center space-x-6 mb-8"
+          >
+            <EyeOutlined className="text-5xl md:text-6xl text-yellow-400 drop-shadow-2xl" />
+            <SafetyOutlined className="text-5xl md:text-6xl text-yellow-300 drop-shadow-2xl" />
+            <TeamOutlined className="text-5xl md:text-6xl text-yellow-400 drop-shadow-2xl" />
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 drop-shadow-2xl"
+          >
+            <span className="block mb-2">Nhà nước trong sạch, vững mạnh</span>
+            <span className="block text-yellow-300 mt-4">
+              Theo tư tưởng Hồ Chí Minh
+            </span>
+          </motion.h1>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex justify-center mb-6"
+          >
+            <div className="h-1 w-32 bg-yellow-400 rounded-full"></div>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="text-lg md:text-xl lg:text-2xl text-yellow-50 font-semibold max-w-4xl mx-auto leading-relaxed drop-shadow-lg"
+          >
+            Xây dựng và hoàn thiện Nhà nước
+            <br />
+            theo tinh thần "Của dân, do dân, vì dân"
+          </motion.p>
         </div>
-      </motion.div>
+      </div>
 
       <div className="container mx-auto px-6 py-12 space-y-16">
         {/* Bản chất nhà nước */}

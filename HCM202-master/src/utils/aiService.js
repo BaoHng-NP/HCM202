@@ -242,16 +242,49 @@ const getMockResponse = (message) => {
     return '🛡️ **"GIẶC NỘI XÂM"** - Tư tưởng của Hồ Chí Minh:\n\n⚠️ **Khái niệm:**\n- Hồ Chí Minh gọi tham ô, lãng phí, quan liêu là "GIẶC NỘI XÂM"\n- "Giặc ở trong lòng" - NGUY HIỂM hơn giặc ngoại xâm\n- Phê phán: "Lấy của công dùng vào việc tư, quên cả thanh liêm, đạo đức"\n\n🔥 **3 căn bệnh chính:**\n- **THAM Ô:** Thu vén của tiền, lợi dụng quyền hành\n- **LÃNG PHÍ:** Căn bệnh Hồ Chí Minh lên án gay gắt\n- **QUAN LIÊU:** "Bệnh gốc" sinh ra tham ô, lãng phí\n\n💡 **Đặc điểm quan liêu:**\n- Không sát việc, không gần gũi quần chúng\n- Không kiểm tra, không biết việc mà cứ ngồi xét\n- Xa rời thực tế, xa rời nhân dân\n\n⚡ **Nguyên tắc:** Cán bộ chức vụ càng cao, trách nhiệm càng lớn, phải làm gương trước!';
   }
 
-  // Questions about Party building
+  // Questions about Party building - EXPANDED to catch more variations
   if (
     lowerMsg.includes("xây dựng đảng") ||
     lowerMsg.includes("đảng trong sạch") ||
+    lowerMsg.includes("đảng vững mạnh") ||
+    (lowerMsg.includes("đảng") && lowerMsg.includes("trong sạch")) ||
+    (lowerMsg.includes("đảng") && lowerMsg.includes("vững mạnh")) ||
+    (lowerMsg.includes("đảng") && lowerMsg.includes("cần làm gì")) ||
+    (lowerMsg.includes("đảng") && lowerMsg.includes("làm gì")) ||
+    (lowerMsg.includes("đảng") && lowerMsg.includes("thật sự")) ||
     lowerMsg.includes("cán bộ đảng viên") ||
     lowerMsg.includes("đảng cộng sản") ||
     lowerMsg.includes("chỉnh đốn") ||
-    lowerMsg.includes("đường lối đảng")
+    lowerMsg.includes("đường lối đảng") ||
+    lowerMsg.includes("suy thoái tư tưởng") ||
+    lowerMsg.includes("tự diễn biến") ||
+    lowerMsg.includes("tự chuyển hóa")
   ) {
-    return '🔴 **XÂY DỰNG ĐẢNG THẬT SỰ TRONG SẠCH, VỮNG MẠNH:**\n\n📖 **1. Xây dựng về ĐƯỜNG LỐI:**\n- Đảng phải đề ra đường lối, chủ trương ĐÚNG ĐẮN\n- Dựa trên Mác-Lênin sáng tạo + tư tưởng Hồ Chí Minh\n- Phù hợp hoàn cảnh từng giai đoạn, thời kỳ\n- Thể chế hóa thành hành động của toàn hệ thống\n\n🔧 **2. TỔ CHỨC THỰC HIỆN & CHỈNH ĐỐN:**\n- Thường xuyên chỉnh đốn nội bộ\n- Đấu tranh chống "suy thoái tư tưởng chính trị"\n- Chống "tự diễn biến", "tự chuyển hóa"\n- Để Đảng xứng đáng là người cầm quyền\n\n👨‍💼 **3. CÁN BỘ ĐẢNG VIÊN:**\n- Đảng viên vừa là LÃNH ĐẠO vừa là "ĐÀY TỚ trung thành" của nhân dân\n- Thống nhất giữa NÓI và LÀM\n- Cán bộ chiến lược phải nêu cao trách nhiệm GƯƠNG MẪU\n- Luôn đặt lợi ích nhân dân lên hàng đầu';
+    return `🔴 **ĐẢNG CẦN LÀM GÌ ĐỂ THẬT SỰ TRONG SẠCH, VỮNG MẠNH?**
+
+Theo tư tưởng Hồ Chí Minh, có 3 NỘI DUNG CHÍNH:
+
+📖 **1. XÂY DỰNG VỀ ĐƯỜNG LỐI:**
+- Đảng phải đề ra đường lối, chủ trương ĐÚNG ĐẮN
+- Dựa trên nền tảng lý luận Mác-Lênin sáng tạo + tư tưởng Hồ Chí Minh
+- Phù hợp với hoàn cảnh từng giai đoạn, thời kỳ cụ thể
+- Thể chế hóa thành hành động của toàn hệ thống chính trị
+
+🔧 **2. TỔ CHỨC THỰC HIỆN & CHỈNH ĐỐN:**
+- Tổ chức thực hiện THẬT TỐT đường lối, chủ trương của Đảng
+- Thường xuyên CHỈNH ĐỐN nội bộ để Đảng xứng đáng là người cầm quyền
+- Đấu tranh chống "SUY THOÁI về tư tưởng chính trị, đạo đức, lối sống"
+- Chống "TỰ DIỄN BIẾN", "TỰ CHUYỂN HÓA" trong nội bộ
+- Biến đường lối thành hành động của tất cả tổ chức trong hệ thống
+
+👨‍💼 **3. VỀ CÁN BỘ, ĐẢNG VIÊN:**
+- Đảng viên vừa là LÃNH ĐẠO vừa là "ĐÀY TỚ trung thành" của nhân dân
+- Thống nhất giữa lời NÓI và việc LÀM
+- Cán bộ chiến lược phải nêu cao trách nhiệm GƯƠNG MẪU
+- Luôn đặt lợi ích nhân dân lên hàng đầu
+- Gần gũi với quần chúng, không xa rời thực tế
+
+✅ **KẾT LUẬN:** Đây là 3 trụ cột quan trọng để xây dựng Đảng thật sự trong sạch, vững mạnh theo tư tưởng Hồ Chí Minh (Chương 4, mục 4.3.1)`;
   }
 
   // Questions about State building
@@ -294,16 +327,23 @@ const getMockResponse = (message) => {
     "4.2.3",
     "4.3",
     "đảng cộng sản việt nam",
+    "đảng cộng sản",
     "nhà nước việt nam",
     "xây dựng đảng",
     "xây dựng nhà nước",
+    "đảng trong sạch",
+    "đảng vững mạnh",
+    "trong sạch vững mạnh",
     "kiểm soát quyền lực",
     "giặc nội xâm",
     "tham ô",
     "lãng phí",
     "quan liêu",
+    "tham nhũng",
     "của dân do dân vì dân",
     "cán bộ đảng viên",
+    "đảng viên",
+    "cán bộ",
     "chỉnh đốn",
     "đường lối",
     "pháp luật",
@@ -312,6 +352,9 @@ const getMockResponse = (message) => {
     "tư pháp",
     "dân chủ",
     "cách mạng",
+    "suy thoái tư tưởng",
+    "tự diễn biến",
+    "tự chuyển hóa",
   ];
 
   const hasValidKeyword = validKeywords.some((keyword) =>

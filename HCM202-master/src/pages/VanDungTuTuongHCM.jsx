@@ -24,28 +24,61 @@ import {
 const VanDungTuTuongHCM = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-red-50">
-      {/* Header Section */}
-      <motion.div
-        className="bg-gradient-to-r from-blue-600 to-red-600 text-white py-16"
-        initial={{ opacity: 0, y: -50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        viewport={{ once: true }}
+      {/* Hero Banner with Background Image */}
+      <div
+        className="w-full py-20 md:py-32"
+        style={{
+          backgroundImage: `linear-gradient(rgba(185, 28, 28, 0.65), rgba(153, 27, 27, 0.65)), url('https://a.tcnn.vn//Images/images/Xay-dung-Dang-trong-sach-vu1.jpg')`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+        }}
       >
         <div className="container mx-auto px-6 text-center">
-          <div className="flex justify-center space-x-6 mb-6">
-            <TeamOutlined className="text-5xl text-blue-100" />
-            <BuildOutlined className="text-5xl text-red-100" />
-          </div>
-          <h1 className="text-4xl font-bold mb-4">
-            Vận dụng tư tưởng Hồ Chí Minh về xây dựng Đảng và Nhà nước
-          </h1>
-          <p className="text-xl text-blue-100 max-w-3xl mx-auto">
-            Chương 4.3: Xây dựng Đảng thật sự trong sạch, vững mạnh và Nhà nước
-            của dân, do dân, vì dân trong thời kỳ mới
-          </p>
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="flex justify-center space-x-6 mb-8"
+          >
+            <StarOutlined className="text-5xl md:text-6xl text-yellow-400 drop-shadow-2xl" />
+            <TeamOutlined className="text-5xl md:text-6xl text-yellow-300 drop-shadow-2xl" />
+            <BuildOutlined className="text-5xl md:text-6xl text-yellow-400 drop-shadow-2xl" />
+          </motion.div>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 drop-shadow-2xl"
+          >
+            <span className="block mb-2">Vận dụng tư tưởng Hồ Chí Minh</span>
+            <span className="block text-yellow-300 mt-4">
+              về xây dựng Đảng và Nhà nước
+            </span>
+          </motion.h1>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex justify-center mb-6"
+          >
+            <div className="h-1 w-32 bg-yellow-400 rounded-full"></div>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="text-lg md:text-xl lg:text-2xl text-yellow-50 font-semibold max-w-4xl mx-auto leading-relaxed drop-shadow-lg"
+          >
+            Chương 4.3: Xây dựng Đảng thật sự trong sạch, vững mạnh
+            <br />
+            và Nhà nước của dân, do dân, vì dân trong thời kỳ mới
+          </motion.p>
         </div>
-      </motion.div>
+      </div>
 
       <div className="container mx-auto px-6 py-12 space-y-16">
         {/* Tư tưởng cơ bản về xây dựng Đảng và Nhà nước */}

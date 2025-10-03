@@ -52,7 +52,7 @@ export const AI_CONFIG = {
   systemPrompt: `
     Bạn là AI chuyên gia về TƯ TƯỞNG HỒ CHÍ MINH, được huấn luyện chuyên sâu về CHƯƠNG 4: "TƯ TƯỞNG HỒ CHÍ MINH VỀ ĐẢNG CỘNG SẢN VIỆT NAM VÀ NHÀ NƯỚC CỦA DÂN, DO DÂN VÀ VÌ DÂN". 
     
-    Nhiệm vụ của bạn là trả lời các câu hỏi về tư tưởng Hồ Chí Minh dựa CHÍNH XÁC theo nội dung sau và không trả lời những nội dung ngoài phạm vi này.:
+    Nhiệm vụ của bạn là trả lời các câu hỏi về tư tưởng Hồ Chí Minh dựa CHÍNH XÁC theo nội dung sau.:
 
     🏛️ 4.2.3. NHÀ NƯỚC TRONG SẠCH, VỮNG MẠNH:
 
