@@ -218,6 +218,130 @@ const NhaNotronSachVungManh = () => {
                 className="border-blue-200"
               />
             </motion.div>
+
+            {/* Nội dung và cơ chế kiểm soát - THÊM MỚI */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 1.6 }}
+            >
+              <div className="grid md:grid-cols-2 gap-8">
+                <Card className="border-l-4 border-green-500">
+                  <h3 className="text-xl font-semibold mb-4 text-green-700">
+                    Nội dung kiểm soát của Đảng
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-green-700 mb-2 flex items-center">
+                        <CheckCircleOutlined className="mr-2" />
+                        Theo dõi và hoàn thiện
+                      </h4>
+                      <p className="text-gray-700 text-sm">
+                        Theo dõi, hoàn thành mọi công việc, hoàn thiện các quy
+                        chế
+                      </p>
+                    </div>
+
+                    <div className="bg-blue-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-blue-700 mb-2 flex items-center">
+                        <CheckCircleOutlined className="mr-2" />
+                        Tăng cường kiểm tra
+                      </h4>
+                      <p className="text-gray-700 text-sm">
+                        Các cấp ủy tăng cường công tác kiểm tra, tự kiểm tra
+                      </p>
+                    </div>
+
+                    <div className="bg-yellow-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-yellow-700 mb-2 flex items-center">
+                        <CheckCircleOutlined className="mr-2" />
+                        Giáo dục gương mẫu
+                      </h4>
+                      <p className="text-gray-700 text-sm">
+                        Giáo dục Đảng viên, cán bộ làm gương tốt cho nhân dân
+                      </p>
+                    </div>
+
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-purple-700 mb-2 flex items-center">
+                        <CheckCircleOutlined className="mr-2" />
+                        Kiểm soát hai chiều
+                      </h4>
+                      <p className="text-gray-700 text-sm">
+                        Thực hiện kiểm soát: từ trên xuống và từ dưới lên
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="border-l-4 border-orange-500">
+                  <h3 className="text-xl font-semibold mb-4 text-orange-700">
+                    Cơ chế thể chế kiểm soát
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="bg-orange-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-orange-700 mb-2">
+                        Tổ chức phân quyền
+                      </h4>
+                      <p className="text-gray-700 text-sm">
+                        Tổ chức thông qua việc phân công, phân nhiệm giữa các cơ
+                        quan quyền lực
+                      </p>
+                    </div>
+
+                    <div className="bg-red-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-red-700 mb-2">
+                        Quy định Hiến pháp 1946
+                      </h4>
+                      <p className="text-gray-700 text-sm">
+                        "Nghị viện nhân dân" có quyền "Kiểm soát và phê bình
+                        Chính phủ"
+                      </p>
+                    </div>
+
+                    <div className="bg-indigo-50 p-4 rounded-lg">
+                      <h4 className="font-semibold text-indigo-700 mb-2">
+                        Phân công, phối hợp
+                      </h4>
+                      <p className="text-gray-700 text-sm">
+                        Xác định rõ cơ chế phân công, phối hợp thực thi quyền
+                        lực nhà nước
+                      </p>
+                    </div>
+
+                    <div className="bg-teal-50 p-4 rounded-lg border-2 border-teal-200">
+                      <h4 className="font-semibold text-teal-700 mb-2">
+                        Ba nhánh quyền lực
+                      </h4>
+                      <p className="text-gray-700 text-sm font-medium">
+                        Đặc biệt là cơ chế kiểm soát quyền lực giữa các cơ quan:
+                      </p>
+                      <div className="flex justify-between mt-2 text-xs">
+                        <span className="bg-teal-100 px-2 py-1 rounded">
+                          Lập pháp
+                        </span>
+                        <span className="bg-teal-100 px-2 py-1 rounded">
+                          Hành pháp
+                        </span>
+                        <span className="bg-teal-100 px-2 py-1 rounded">
+                          Tư pháp
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              </div>
+
+              <div className="mt-6">
+                <Alert
+                  message="Nguyên tắc kiểm soát theo Hồ Chí Minh"
+                  description="Kiểm soát quyền lực phải được thực hiện một cách có hệ thống, từ nội dung cụ thể đến cơ chế thể chế, đảm bảo quyền lực được sử dụng đúng mục đích phục vụ nhân dân."
+                  type="success"
+                  showIcon
+                  className="border-green-200"
+                />
+              </div>
+            </motion.div>
           </div>
         </motion.section>
 

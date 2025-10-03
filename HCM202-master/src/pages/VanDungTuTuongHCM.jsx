@@ -134,7 +134,7 @@ const VanDungTuTuongHCM = () => {
         >
           <h2 className="text-3xl font-bold text-center mb-8 text-red-700">
             <TeamOutlined className="mr-3" />
-            4.3.1 Xây dựng Đảng thật sự trong sạch, vững mạnh
+            I. Xây dựng Đảng thật sự trong sạch, vững mạnh
           </h2>
 
           {/* 1. Xây dựng về đường lối */}
@@ -341,7 +341,7 @@ const VanDungTuTuongHCM = () => {
         >
           <h2 className="text-3xl font-bold text-center mb-8 text-blue-700">
             <BuildOutlined className="mr-3" />
-            4.3.2 Xây dựng Nhà nước của dân, do dân, vì dân
+            II. Xây dựng Nhà nước của dân, do dân, vì dân
           </h2>
 
           {/* 1. Mục tiêu và Pháp luật */}
